@@ -25,28 +25,72 @@ const Form = () => {
     console.log(submission);
   };
 
-  const handleSubmit = (e) => {
-    console.log('submitted');
-    setSubmission((prevSubmission) => {
-      return {
-        ...prevSubmission,
-        submitted: true,
-      };
-    });
+  const validatedForm = () => {
+    let isError = false;
 
-    setTimeout(() => {
-      setSubmission({
-        firstName: '',
-        firstNameError: '',
-        lastName: '',
-        lastNameError: '',
-        email: '',
-        emailError: '',
-        message: '',
-        messageError: '',
-        submitted: false,
+    if (submission.firstName === '') {
+      isError = true;
+      setSubmission((prevSubmission) => {
+        return { ...prevSubmission, firstNameError: 'First name is required' };
       });
-    }, 3000);
+    }
+
+    if (submission.lastName === '') {
+      isError = true;
+      setSubmission((prevSubmission) => {
+        return { ...prevSubmission, lastNameError: 'Last name is required' };
+      });
+    }
+
+    if (submission.firstName === '') {
+      isError = true;
+      setSubmission((prevSubmission) => {
+        return { ...prevSubmission, emailError: 'Email is required' };
+      });
+    }
+
+    if (submission.message === '') {
+      isError = true;
+      setSubmission((prevSubmission) => {
+        return { ...prevSubmission, messageError: 'Message is required' };
+      });
+    }
+
+    if (submission.email.indexOf('@') === -1) {
+      isError = true;
+      setSubmission((prevSubmission) => {
+        return { ...prevSubmission, emailError: 'Valid email is required' };
+      });
+    }
+
+    return isError;
+  };
+
+  const handleSubmit = (e) => {
+    const err = validatedForm();
+
+    if (!err) {
+      setSubmission((prevSubmission) => {
+        return {
+          ...prevSubmission,
+          submitted: true,
+        };
+      });
+
+      setTimeout(() => {
+        setSubmission({
+          firstName: '',
+          firstNameError: '',
+          lastName: '',
+          lastNameError: '',
+          email: '',
+          emailError: '',
+          message: '',
+          messageError: '',
+          submitted: false,
+        });
+      }, 3000);
+    }
 
     e.preventDefault();
   };
@@ -65,6 +109,7 @@ const Form = () => {
             margin="normal"
             onChange={handleChange}
             value={submission.firstName}
+            helperText={submission.firstNameError}
           />
 
           <TextField
@@ -74,6 +119,7 @@ const Form = () => {
             margin="normal"
             onChange={handleChange}
             value={submission.lastName}
+            helperText={submission.lastNameError}
           />
 
           <TextField
@@ -83,6 +129,7 @@ const Form = () => {
             margin="normal"
             onChange={handleChange}
             value={submission.email}
+            helperText={submission.emailError}
           />
 
           <TextField
@@ -96,6 +143,7 @@ const Form = () => {
             margin="normal"
             onChange={handleChange}
             value={submission.message}
+            helperText={submission.messageError}
           />
           <Button
             style={{ marginTop: '2rem' }}
