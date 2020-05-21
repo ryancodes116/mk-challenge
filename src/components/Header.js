@@ -11,7 +11,7 @@ const Header = () => {
         <Toolbar className={styles.flex}>
           <img className={styles.logo} src={logo} alt="MK Decision" />
           <Typography variant="h6" style={{ marginLeft: 'auto' }}>
-            Form Submission
+            Contact Form
           </Typography>
         </Toolbar>
       </AppBar>

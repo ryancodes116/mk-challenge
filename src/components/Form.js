@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 import styles from '../styles/Form.module.css';
-import { Paper, Button, Typography } from '@material-ui/core';
-
-import InputField from './InputField';
+import { Paper, TextField, Button, Typography } from '@material-ui/core';
+import DoneIcon from '@material-ui/icons/Done';
 
 const Form = () => {
   const [submission, setSubmission] = useState({
     firstName: '',
+    firstNameError: '',
     lastName: '',
+    lastNameError: '',
     email: '',
-    summary: '',
+    emailError: '',
+    message: '',
+    messageError: '',
+    submitted: false,
   });
 
-  const handleChange = (name, value) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setSubmission((prevSubmission) => {
       return { ...prevSubmission, [name]: value };
     });
@@ -21,6 +27,26 @@ const Form = () => {
 
   const handleSubmit = (e) => {
     console.log('submitted');
+    setSubmission((prevSubmission) => {
+      return {
+        ...prevSubmission,
+        submitted: true,
+      };
+    });
+
+    setTimeout(() => {
+      setSubmission({
+        firstName: '',
+        firstNameError: '',
+        lastName: '',
+        lastNameError: '',
+        email: '',
+        emailError: '',
+        message: '',
+        messageError: '',
+        submitted: false,
+      });
+    }, 3000);
 
     e.preventDefault();
   };
@@ -28,47 +54,59 @@ const Form = () => {
   return (
     <div className={styles.form}>
       <Paper elevation={3} className={styles.paper}>
-        <Typography variant="h3" color="secondary">
-          Contact Us
+        <Typography variant="h4" color="secondary">
+          Let's Connect!
         </Typography>
         <form className={styles.form}>
-          <InputField
-            name="firstName"
+          <TextField
             label="First Name"
-            handleInput={handleChange}
+            name="firstName"
+            fullWidth
+            margin="normal"
+            onChange={handleChange}
             value={submission.firstName}
           />
 
-          <InputField
-            name="lastName"
+          <TextField
             label="Last Name"
-            handleInput={handleChange}
+            name="lastName"
+            fullWidth
+            margin="normal"
+            onChange={handleChange}
             value={submission.lastName}
           />
 
-          <InputField
-            name="email"
+          <TextField
             label="Email"
-            handleInput={handleChange}
+            name="email"
+            fullWidth
+            margin="normal"
+            onChange={handleChange}
             value={submission.email}
           />
 
-          <InputField
-            name="message"
+          <TextField
+            style={{ marginTop: '2rem' }}
             label="Message"
-            textArea="true"
-            handleInput={handleChange}
-            value={submission.error}
+            name="message"
+            fullWidth
+            multiline
+            rows={4}
+            variant="outlined"
+            margin="normal"
+            onChange={handleChange}
+            value={submission.message}
           />
-
           <Button
+            style={{ marginTop: '2rem' }}
+            size="large"
             onClick={handleSubmit}
             fullWidth
             variant="contained"
             color="secondary"
             handleInput={handleChange}
           >
-            Submit
+            {submission.submitted ? <DoneIcon /> : 'SUBMIT'}
           </Button>
         </form>
       </Paper>
