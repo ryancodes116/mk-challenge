@@ -11,6 +11,13 @@
   padding: 2.5rem 2rem;
 }
 
+.small {
+  color: #416c89;
+  margin-top: 0.5rem;
+  padding-left: 0.5rem;
+  align-self: flex-start;
+}
+
 /* Media Queries */
 @media (min-width: 720px) {
   .form {

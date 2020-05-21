@@ -52,7 +52,7 @@ const Form = () => {
       });
     }
 
-    if (submission.firstName === '') {
+    if (submission.email === '') {
       isError = true;
       setSubmission((prevSubmission) => {
         return { ...prevSubmission, emailError: 'Email is required' };
@@ -66,7 +66,9 @@ const Form = () => {
       });
     }
 
-    if (submission.email.indexOf('@') === -1) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+    if (!re.test(submission.email.trim())) {
       isError = true;
       setSubmission((prevSubmission) => {
         return { ...prevSubmission, emailError: 'Valid email is required' };
@@ -106,13 +108,17 @@ const Form = () => {
   };
 
   return (
-    <div className={styles.form}>
+    <div
+      className={styles.form}
+      style={{ marginBottom: validatedForm ? '4rem' : '0' }}
+    >
       <Paper elevation={3} className={styles.paper}>
         <Typography variant="h4" color="secondary">
           Let's Connect!
         </Typography>
         <form className={styles.form}>
           <TextField
+            required
             label="First Name"
             name="firstName"
             fullWidth
@@ -123,6 +129,7 @@ const Form = () => {
           />
 
           <TextField
+            required
             label="Last Name"
             name="lastName"
             fullWidth
@@ -133,6 +140,7 @@ const Form = () => {
           />
 
           <TextField
+            required
             label="Email"
             name="email"
             fullWidth
@@ -143,6 +151,7 @@ const Form = () => {
           />
 
           <TextField
+            required
             style={{ marginTop: '2rem' }}
             label="Message"
             name="message"
@@ -155,6 +164,8 @@ const Form = () => {
             value={submission.message}
             helperText={submission.messageError}
           />
+
+          <small className={styles.small}>* Required</small>
           <Button
             style={{ marginTop: '2rem' }}
             size="large"
@@ -164,7 +175,7 @@ const Form = () => {
             color="secondary"
             handleInput={handleChange}
           >
-            {submission.submitted ? 'SUBMITTED!' : 'SUBMIT'}
+            {submission.submitted ? <DoneIcon /> : 'SUBMIT'}
           </Button>
         </form>
       </Paper>
