@@ -1,0 +1,14 @@
+.appBar {
+  padding: 1rem;
+  margin-bottom: 5rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.logo {
+  width: 30%;
+  max-width: 170px;
+  border-radius: 0.5rem;
+}
