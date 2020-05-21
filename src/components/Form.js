@@ -26,6 +26,16 @@ const Form = () => {
   };
 
   const validatedForm = () => {
+    setSubmission((prevSubmission) => {
+      return {
+        ...prevSubmission,
+        firstNameError: '',
+        lastNameError: '',
+        emailError: '',
+        messageError: '',
+      };
+    });
+
     let isError = false;
 
     if (submission.firstName === '') {
@@ -154,7 +164,7 @@ const Form = () => {
             color="secondary"
             handleInput={handleChange}
           >
-            {submission.submitted ? <DoneIcon /> : 'SUBMIT'}
+            {submission.submitted ? 'SUBMITTED!' : 'SUBMIT'}
           </Button>
         </form>
       </Paper>
