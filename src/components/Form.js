@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from '../styles/Form.module.css';
 import { Paper, TextField, Button, Typography } from '@material-ui/core';
 import DoneIcon from '@material-ui/icons/Done';
+import axios from 'axios';
 
 const Form = () => {
   const [submission, setSubmission] = useState({
@@ -22,7 +23,6 @@ const Form = () => {
     setSubmission((prevSubmission) => {
       return { ...prevSubmission, [name]: value };
     });
-    console.log(submission);
   };
 
   const validatedForm = () => {
@@ -66,7 +66,7 @@ const Form = () => {
       });
     }
 
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (!re.test(submission.email.trim())) {
       isError = true;
@@ -78,33 +78,50 @@ const Form = () => {
     return isError;
   };
 
-  const handleSubmit = (e) => {
-    const err = validatedForm();
-
-    if (!err) {
-      setSubmission((prevSubmission) => {
-        return {
-          ...prevSubmission,
-          submitted: true,
-        };
-      });
-
-      setTimeout(() => {
-        setSubmission({
-          firstName: '',
-          firstNameError: '',
-          lastName: '',
-          lastNameError: '',
-          email: '',
-          emailError: '',
-          message: '',
-          messageError: '',
-          submitted: false,
-        });
-      }, 3000);
-    }
-
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const err = validatedForm();
+
+      if (err) {
+        return;
+      } else {
+        setSubmission((prevSubmission) => {
+          return {
+            ...prevSubmission,
+            submitted: true,
+          };
+        });
+
+        setTimeout(() => {
+          setSubmission({
+            firstName: '',
+            firstNameError: '',
+            lastName: '',
+            lastNameError: '',
+            email: '',
+            emailError: '',
+            message: '',
+            messageError: '',
+            submitted: false,
+          });
+        }, 3000);
+      }
+
+      const { firstName, lastName, email, message } = submission;
+      const { data } = await axios.post(
+        'https://a0t9tty7e3.execute-api.us-west-2.amazonaws.com/default/store-message',
+        {
+          firstName,
+          lastName,
+          email,
+          message,
+        }
+      );
+      console.log('response data==>>>>>', data);
+    } catch (err) {
+      console.log('an error occurred==>>>>>', err);
+    }
   };
 
   return (
@@ -173,7 +190,7 @@ const Form = () => {
             fullWidth
             variant="contained"
             color="secondary"
-            handleInput={handleChange}
+            //handleInput={handleChange}
           >
             {submission.submitted ? <DoneIcon /> : 'SUBMIT'}
           </Button>
